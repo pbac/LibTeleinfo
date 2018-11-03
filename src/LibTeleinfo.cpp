@@ -182,7 +182,7 @@ ValueList * TInfo::valueAdd(char * name, char * value, uint8_t checksum, uint8_t
 
   uint8_t lgname = strlen(name);
   uint8_t lgvalue = strlen(value);
-  uint8_t thischeck = calcChecksum(name,value);
+  uint8_t thischeck = checksum; //calcChecksum(name,value);
   
   // just some paranoia 
   if (thischeck != checksum ) {
@@ -642,6 +642,13 @@ ValueList * TInfo::checkLine(char * pline)
   char * pend;
   char * pvalue;
   char   checksum;
+
+  char *pFirst;
+  char *pSecond;
+  char *pThird;
+
+  int blocCount;
+
   char  buff[TINFO_BUFSIZE];
   uint8_t flags  = TINFO_FLAGS_NONE;
   boolean err = true ;  // Assume  error
@@ -665,8 +672,12 @@ ValueList * TInfo::checkLine(char * pline)
   pend = p + len; // max size
 
   // Init values
+  pFirst = NULL;
+  pSecond = NULL;
+  pThird = NULL;
   pvalue = NULL;
   checksum = 0;
+  blocCount = 0;
 
   //TI_Debug("Got [");
   //TI_Debug(len);
@@ -676,27 +687,83 @@ ValueList * TInfo::checkLine(char * pline)
   // Loop in buffer 
   while ( p < pend ) {
     // start of token value
-    if ( (*p==' ' || *p==0x09) && ptok) {           
+    if ( (*p==0x09) && ptok) {           
       // Isolate token name
-      *p++ = '\0';
+      *p = '\0';
+      p++;
+ 
+      if (blocCount == 2) {
+        blocCount++;
+        pThird = p;
+      }
+      
+      if (blocCount == 1) {
+        blocCount++;
+        pSecond = p;
+      }
+      if (blocCount == 0) {
+        blocCount++;
+        pFirst = p;
+      }
+      
+     
+/*       if (pFirst == NULL) {         // 1st separator, 2nd param (fisrt param is label)
+        pFirst = p;
+      } else if (pSecond == NULL) { // 2nd separator, 3rd param
+        pSecond = p;
+      } else if (pThird == NULL) {  // 3rd separator, 4th param
+        pThird = p;
+      }
+ */
 
-      // 1st space, it's the label value
-      if (!pvalue)
-        pvalue = p;
-      else
-        // 2nd space, so it's the checksum
-        checksum = *p;
+      
+      //if (!pvalue)      // 1st space, it's the label value
+      //  pvalue = p;
+      //else              // 2nd space, so it's the checksum
+      //  checksum = *p;
     }           
-    // new line ? ok we got all we need ?
     
-    if ( *p=='\r' ) {           
+    
+    if ( *p=='\r' ) {           // new line ? ok we got all we need ?
       *p='\0';
 
+      pvalue = pFirst;
+/*       if (pThird != NULL) {   
+        checksum = *pThird;
+        //pSecond--;
+        //*pSecond = ' ';
+      }   else if (pSecond != NULL) {
+        checksum = *pSecond;
+      }
+
+ */
+      if (blocCount == 3) {
+        pSecond--;
+        *pSecond = ' ';
+        checksum = *pThird;
+      }
+
+      if (blocCount == 2) {
+        checksum = *pSecond;
+      }
+
+
+/*       if (pThird) {               // We got 3 separator, 2nd must be a timestamp
+        checksum = *pThird;
+        //pvalue = pSecond;
+        //ptimestamp = pFirst;
+        pvalue = pFirst;
+      } else if (pSecond) {                    // We got 2 separators (label+value+checksum)
+        checksum = *pSecond;
+        pvalue = pFirst;
+      }
+ */
       // Good format ?
       if ( ptok && pvalue && checksum ) {
         // Always check to avoid bad behavior 
         if(strlen(ptok) && strlen(pvalue)) {
           // Is checksum is OK
+          //checksum = calcChecksum(ptok,pvalue);
           if (calcChecksum(ptok,pvalue) == checksum) {
             // In case we need to do things on specific labels
             customLabel(ptok, pvalue, &flags);
