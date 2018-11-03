@@ -571,8 +571,9 @@ Comments: return '\0' in case of error
 unsigned char TInfo::calcChecksum(char *etiquette, char *valeur) 
 {
   uint8_t i ;
-  uint8_t sum = ' ';  // Somme des codes ASCII du message + un espace
+  uint8_t sum = '\t';  // Somme des codes ASCII du message + un espace
 
+  sum += '\t';
   // avoid dead loop, always check all is fine 
   if (etiquette && valeur) {
     // this will not hurt and may save our life ;-)
@@ -675,7 +676,7 @@ ValueList * TInfo::checkLine(char * pline)
   // Loop in buffer 
   while ( p < pend ) {
     // start of token value
-    if ( *p==' ' && ptok) {           
+    if ( (*p==' ' || *p==0x09) && ptok) {           
       // Isolate token name
       *p++ = '\0';
 
@@ -696,7 +697,7 @@ ValueList * TInfo::checkLine(char * pline)
         // Always check to avoid bad behavior 
         if(strlen(ptok) && strlen(pvalue)) {
           // Is checksum is OK
-          if ( calcChecksum(ptok,pvalue) == checksum) {
+          if (calcChecksum(ptok,pvalue) == checksum) {
             // In case we need to do things on specific labels
             customLabel(ptok, pvalue, &flags);
 

@@ -743,7 +743,8 @@ void setup()
   // we swap RXD1/RXD1 to RXD2/TXD2 
   // Note that TXD2 is not used teleinfo is receive only
   #ifdef DEBUG_SERIAL1
-    Serial.begin(1200, SERIAL_7E1);
+    //Serial.begin(1200, SERIAL_7E1);
+    Serial.begin(9600);
     Serial.swap();
   #endif
 
