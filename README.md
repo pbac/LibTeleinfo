@@ -56,13 +56,16 @@ Vous pouvez aller voir les nouveautés et autres projets sur [blog][7]
 
 Modification pour le mode standard du compteur linky.
 Je me suis basé sur https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf pour modifier le code de Charles Hallard
+<br/>
 Résumé de mes changements :
+<br/>
 Wifiinfo.ino : vitesse de transmission : 9600bd au lieu de 12007E1
+<br/>
 Librairie : 
--  le caractère séparateur des champs "Horizontal Tab" HT (0x09), en mode standard est different du caractère séparateur
-    "Space" SP (0x20) en mode historique. Cette disposition permet d’utiliser le caractère “Space” pour les données.
-- gestion de l'horodate dans les groupes d'information (etiquette,horodate,donnée,checksum) ou (etiquette,donnée,checksum)
-   danns le cas de de présence d'une horodate, elle est stockée dans la valeur.
+<br/>
+-  le caractère séparateur des champs "Horizontal Tab" HT (0x09), en mode standard est different du caractère séparateur "Space" SP (0x20) en mode historique. Cette disposition permet d’utiliser le caractère “Space” pour les données.
+<br/>
+- gestion de l'horodate dans les groupes d'information (etiquette,horodate,donnée,checksum) ou (etiquette,donnée,checksum) dans le cas de de présence d'une horodate, elle est stockée dans la valeur.
 
 Le code est pas terrible, mais ca marche très bien chez moi sur un nodemcu (esp8266)
 
