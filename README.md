@@ -52,3 +52,18 @@ Vous pouvez aller voir les nouveautés et autres projets sur [blog][7]
 [12]: https://github.com/hallard/LibTeleinfo/blob/master/Examples/Raspberry_JSON/Raspberry_JSON.ino
 [13]: https://hallard.me/wifiinfo/
 
+
+
+Modification pour le mode standard du compteur linky.
+Je me suis basé sur https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf pour modifier le code de Charles Hallard
+Résumé de mes changements :
+Wifiinfo.ino : vitesse de transmission : 9600bd au lieu de 12007E1
+Librairie : 
+-  le caractère séparateur des champs "Horizontal Tab" HT (0x09), en mode standard est different du caractère séparateur
+    "Space" SP (0x20) en mode historique. Cette disposition permet d’utiliser le caractère “Space” pour les données.
+- gestion de l'horodate dans les groupes d'information (etiquette,horodate,donnée,checksum) ou (etiquette,donnée,checksum)
+   danns le cas de de présence d'une horodate, elle est stockée dans la valeur.
+
+Le code est pas terrible, mais ca marche très bien chez moi sur un nodemcu (esp8266)
+
+
