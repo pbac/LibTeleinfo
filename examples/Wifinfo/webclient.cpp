@@ -233,7 +233,9 @@ boolean jeedomPost(void)
         }
       } // While me
 
-      ret = httpPost( config.jeedom.host, config.jeedom.port, (char *) url.c_str()) ;
+      String urlEncode = url;
+      urlEncode.replace(" ", "+");
+      ret = httpPost( config.jeedom.host, config.jeedom.port, (char *) urlEncode.c_str()) ;
     } // if me
   } // if host
   return ret;
