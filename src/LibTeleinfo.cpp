@@ -692,30 +692,18 @@ ValueList * TInfo::checkLine(char * pline)
       *p = '\0';
       p++;
  
-      if (blocCount == 2) {
+      if (blocCount == 2) { // 3rd separator, 4th param
         blocCount++;
         pThird = p;
       }
-      
-      if (blocCount == 1) {
+      if (blocCount == 1) { // 2nd separator, 3rd param
         blocCount++;
         pSecond = p;
       }
-      if (blocCount == 0) {
+      if (blocCount == 0) { // 1st separator, 2nd param (fisrt param is label)
         blocCount++;
         pFirst = p;
       }
-      
-     
-/*       if (pFirst == NULL) {         // 1st separator, 2nd param (fisrt param is label)
-        pFirst = p;
-      } else if (pSecond == NULL) { // 2nd separator, 3rd param
-        pSecond = p;
-      } else if (pThird == NULL) {  // 3rd separator, 4th param
-        pThird = p;
-      }
- */
-
       
       //if (!pvalue)      // 1st space, it's the label value
       //  pvalue = p;
@@ -728,42 +716,23 @@ ValueList * TInfo::checkLine(char * pline)
       *p='\0';
 
       pvalue = pFirst;
-/*       if (pThird != NULL) {   
-        checksum = *pThird;
-        //pSecond--;
-        //*pSecond = ' ';
-      }   else if (pSecond != NULL) {
-        checksum = *pSecond;
-      }
-
- */
-      if (blocCount == 3) {
+      if (blocCount == 3) { // We got 3 separator, 2nd must be a timestamp
         pSecond--;
         *pSecond = ' ';
         checksum = *pThird;
+        checksum = ((checksum - 0x09) & 63)  + 0x20; // \t replaced with space.
       }
 
-      if (blocCount == 2) {
+      if (blocCount == 2) { // We got 2 separators (label+value+checksum)
         checksum = *pSecond;
       }
 
-
-/*       if (pThird) {               // We got 3 separator, 2nd must be a timestamp
-        checksum = *pThird;
-        //pvalue = pSecond;
-        //ptimestamp = pFirst;
-        pvalue = pFirst;
-      } else if (pSecond) {                    // We got 2 separators (label+value+checksum)
-        checksum = *pSecond;
-        pvalue = pFirst;
-      }
- */
       // Good format ?
       if ( ptok && pvalue && checksum ) {
         // Always check to avoid bad behavior 
         if(strlen(ptok) && strlen(pvalue)) {
           // Is checksum is OK
-          //checksum = calcChecksum(ptok,pvalue);
+          //checksum = calcChecksum(ptok,pvalue);   //cheat for test
           if (calcChecksum(ptok,pvalue) == checksum) {
             // In case we need to do things on specific labels
             customLabel(ptok, pvalue, &flags);
