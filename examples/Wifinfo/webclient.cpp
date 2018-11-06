@@ -220,6 +220,11 @@ boolean jeedomPost(void)
             skip_item = true;
         }
 
+        // Ne pas envoyer les EASF* EASD* a 0
+        if (!strcmp(me->value, "000000000")) {
+            skip_item = true;
+        }
+
         // Si Item virtuel, on le met pas
         if (*me->name =='_')
           skip_item = true;
@@ -234,6 +239,7 @@ boolean jeedomPost(void)
       } // While me
 
       String urlEncode = url;
+      urlEncode.replace("+", "%2B");
       urlEncode.replace(" ", "+");
       ret = httpPost( config.jeedom.host, config.jeedom.port, (char *) urlEncode.c_str()) ;
     } // if me
