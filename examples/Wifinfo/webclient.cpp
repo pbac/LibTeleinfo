@@ -239,6 +239,7 @@ boolean jeedomPost(void)
       } // While me
 
       String urlEncode = url;
+      urlEncode.replace("#", "");
       urlEncode.replace("+", "%2B");
       urlEncode.replace(" ", "+");
       ret = httpPost( config.jeedom.host, config.jeedom.port, (char *) urlEncode.c_str()) ;

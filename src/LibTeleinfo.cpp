@@ -182,7 +182,7 @@ ValueList * TInfo::valueAdd(char * name, char * value, uint8_t checksum, uint8_t
 
   uint8_t lgname = strlen(name);
   uint8_t lgvalue = strlen(value);
-  uint8_t thischeck = checksum; //calcChecksum(name,value);
+  uint8_t thischeck = calcChecksum(name,value);
   
   // just some paranoia 
   if (thischeck != checksum ) {
@@ -686,6 +686,11 @@ ValueList * TInfo::checkLine(char * pline)
   
   // Loop in buffer 
   while ( p < pend ) {
+    if (*p>' ' && *p<'0' && *p!='+') {
+      // remove special char : &"#'()%$...
+      // checksum will fail, but its ok bc we dont want these vcalues.
+      *p=' ';
+    }
     // start of token value
     if ( (*p==0x09) && ptok) {           
       // Isolate token name
