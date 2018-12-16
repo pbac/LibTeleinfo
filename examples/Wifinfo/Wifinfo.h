@@ -47,7 +47,7 @@ extern "C" {
 
 
 #define DEBUG
-#define DEBUG_SERIAL	Serial1
+#define DEBUG_SERIAL	Serial
 #define DEBUG_SERIAL1	
 
 #define WIFINFO_VERSION "1.0.3"

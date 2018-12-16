@@ -43,7 +43,7 @@
 
 
 // Define this if you want library to be verbose
-//#define TI_DEBUG
+#define TI_DEBUG
 
 // I prefix debug macro to be sure to use specific for THIS library
 // debugging, this should not interfere with main sketch or other 
@@ -107,7 +107,7 @@ enum _State_e {
 
 // Local buffer for one line of teleinfo 
 // maximum size, I think it should be enought
-#define TINFO_BUFSIZE  128
+#define TINFO_BUFSIZE  256
 
 // Teleinfo start and end of frame characters
 #define TINFO_STX 0x02

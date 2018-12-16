@@ -55,7 +55,7 @@ NeoPixelBus<NeoRgbFeature, NeoEsp8266BitBang800KbpsMethod> rgb_led(1, RGB_LED_PI
 
 
 // define whole brigtness level for RGBLED (50%)
-uint8_t rgb_brightness = 50;
+uint8_t rgb_brightness = 100;
 // LED Blink timers
 Ticker rgb_ticker;
 Ticker blu_ticker;
@@ -742,11 +742,11 @@ void setup()
   // avoid conflict when flashing, this is why
   // we swap RXD1/RXD1 to RXD2/TXD2 
   // Note that TXD2 is not used teleinfo is receive only
-  #ifdef DEBUG_SERIAL1
+  //#ifdef DEBUG_SERIAL1
     //Serial.begin(1200, SERIAL_7E1);
     Serial.begin(9600);
     Serial.swap();
-  #endif
+  //#endif
 
   // Init teleinfo
   tinfo.init();

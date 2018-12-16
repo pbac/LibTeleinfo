@@ -194,6 +194,15 @@ ValueList * TInfo::valueAdd(char * name, char * value, uint8_t checksum, uint8_t
     TI_Debug(F("' Not added bad checksum calculated '"));
     TI_Debug((char) thischeck);
     TI_Debugln(F("'"));
+  } else if (lgname >= 8 || lgvalue > 100 ) {
+    TI_Debug(name);
+    TI_Debug('=');
+    TI_Debug(value);
+    TI_Debug(F(" '"));
+    TI_Debug((char) checksum);
+    TI_Debug(F("' too long '"));
+    TI_Debug((char) thischeck);
+    TI_Debugln(F("'"));
   } else  {
     // Got one and all seems good ?
     if (me && lgname && lgvalue && checksum) {
@@ -249,8 +258,8 @@ ValueList * TInfo::valueAdd(char * name, char * value, uint8_t checksum, uint8_t
       // + Value + '\0'
       size_t size ;
       #ifdef ESP8266
-        lgname = ESP8266_allocAlign(lgname+1);   // Align name buffer
-        lgvalue = ESP8266_allocAlign(lgvalue+1); // Align value buffer
+        lgname = ESP8266_allocAlign(lgname+5);   // Align name buffer
+        lgvalue = ESP8266_allocAlign(lgvalue+5); // Align value buffer
         // Align the whole structure
         size = ESP8266_allocAlign( sizeof(ValueList) + lgname + lgvalue  )     ; 
       #else
@@ -270,8 +279,8 @@ ValueList * TInfo::valueAdd(char * name, char * value, uint8_t checksum, uint8_t
       // First String located after last struct element
       // Second String located after the First + \0
       newNode->checksum = checksum;
-      newNode->name = (char *)  newNode + sizeof(ValueList);
-      newNode->value = (char *) newNode->name + lgname + 1;
+      newNode->name = (char *)  newNode + sizeof(ValueList) + 1;
+      newNode->value = (char *) newNode->name + lgname + 2;
 
       // Copy the string data
       memcpy(newNode->name , name  , lgname );
@@ -662,6 +671,8 @@ ValueList * TInfo::checkLine(char * pline)
   // a line should be at least 7 Char
   // 2 Label + Space + 1 etiquette + space + checksum + \r
   if ( len < 7 )
+    return NULL;
+  if ( len > 64 )
     return NULL;
 
   // Get our own working copy
