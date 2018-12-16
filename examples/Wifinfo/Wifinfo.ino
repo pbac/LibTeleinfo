@@ -809,7 +809,7 @@ void loop()
   if ( Serial.available() ) {
     // Read Serial and process to tinfo
     c = Serial.read();
-    Serial1.print(c);
+    //Debug(c);
     tinfo.process(c);
   }
 
