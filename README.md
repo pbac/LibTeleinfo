@@ -69,4 +69,5 @@ Librairie :
 
 Le code est pas terrible, mais ca marche très bien chez moi sur un nodemcu (esp8266)
 
-
+En définitive j'ai abandonné cette version du code et fait un nouveau projet avec une ré ecriture complète et plus simple.
+https://github.com/pbac/teleinfo2020
